@@ -4,8 +4,12 @@
   "main": "dist/main.js",
   "author": "Sullivan B",
   "license": "MIT",
+  "engines": {
+    "node": "16.13.2"
+  },
   "scripts": {
     "start": "node dist/main.js",
+    "postinstall": "tsc",
     "watch": "tsc -w",
     "dev": "nodemon dist/main.js"
   },
