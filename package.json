@@ -5,7 +5,7 @@
   "author": "Sullivan B",
   "license": "MIT",
   "scripts": {
-    "start": "clear && node dist/main.js",
+    "start": "node dist/main.js",
     "watch": "tsc -w",
     "dev": "nodemon dist/main.js"
   },
