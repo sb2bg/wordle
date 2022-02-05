@@ -9,6 +9,7 @@
   },
   "scripts": {
     "start": "node dist/main.js",
+    "postinstall": "tsc",
     "watch": "tsc -w",
     "dev": "nodemon dist/main.js"
   },
