@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import express from "express";
 
+const PORT = process.env.PORT || 3000;
 const prisma = new PrismaClient();
 
 const main = async () => {
@@ -10,6 +11,10 @@ const main = async () => {
     res.json({
       hello: "world",
     });
+  });
+
+  app.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`);
   });
 };
 
