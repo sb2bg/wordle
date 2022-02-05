@@ -1,3 +1,5 @@
+import { PrismaClient } from ".prisma/client";
+
 export type VerificationResult = {
   valid: boolean;
   message?: string;
@@ -56,7 +58,10 @@ export const verifyPassword = (password: string): VerificationResult => {
   return { valid: true };
 };
 
-export const verifyUsername = (username: string): VerificationResult => {
+export const verifyUsername = async (
+  username: string,
+  prisma: PrismaClient
+): Promise<VerificationResult> => {
   if (username.length < 3) {
     return {
       valid: false,
@@ -86,14 +91,39 @@ export const verifyUsername = (username: string): VerificationResult => {
     };
   }
 
+  const usernameExists = await prisma.user.findUnique({
+    where: { username },
+  });
+
+  if (usernameExists) {
+    return {
+      valid: false,
+      message: "Username is already taken",
+    };
+  }
+
   return { valid: true };
 };
 
-export const verifyEmail = (email: string): VerificationResult => {
+export const verifyEmail = async (
+  email: string,
+  prisma: PrismaClient
+): Promise<VerificationResult> => {
   if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
     return {
       valid: false,
       message: "Email must be valid",
+    };
+  }
+
+  const emailExists = await prisma.user.findUnique({
+    where: { email },
+  });
+
+  if (emailExists) {
+    return {
+      valid: false,
+      message: "Email is already taken",
     };
   }
 
