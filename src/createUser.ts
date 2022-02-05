@@ -47,5 +47,11 @@ export const createUser = async (
     data: { username, email, password: await argon2.hash(password) },
   });
 
-  return res.json(user);
+  return res.json({
+    user: {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+    },
+  });
 };
