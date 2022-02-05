@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import express from "express";
 import { createUser } from "./createUser";
+import { loginUser } from "./loginUser";
 
 const PORT = process.env.PORT || 3000;
 const prisma = new PrismaClient();
@@ -12,6 +13,10 @@ const main = async () => {
 
   app.post("/users", async (req, res) => {
     await createUser(req, res, prisma);
+  });
+
+  app.post("/login", async (req, res) => {
+    await loginUser(req, res, prisma);
   });
 
   app.listen(PORT, () => {
