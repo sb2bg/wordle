@@ -11,7 +11,7 @@ export const createUser = async (
   let { username, email, password } = req.body;
 
   if (!username || !email || !password) {
-    res.status(400).json({
+    return res.status(400).json({
       error: "username, email, and password are required",
     });
   }
@@ -22,7 +22,7 @@ export const createUser = async (
   const usernameVerification = await verifyUsername(username, prisma);
 
   if (!usernameVerification.valid) {
-    res.status(400).json({
+    return res.status(400).json({
       error: usernameVerification.message,
     });
   }
@@ -30,7 +30,7 @@ export const createUser = async (
   const emailVerification = await verifyEmail(email, prisma);
 
   if (!emailVerification.valid) {
-    res.status(400).json({
+    return res.status(400).json({
       error: emailVerification.message,
     });
   }
@@ -38,7 +38,7 @@ export const createUser = async (
   const passwordVerification = verifyPassword(password);
 
   if (!passwordVerification.valid) {
-    res.status(400).json({
+    return res.status(400).json({
       error: passwordVerification.message,
     });
   }
@@ -47,5 +47,5 @@ export const createUser = async (
     data: { username, email, password: await argon2.hash(password) },
   });
 
-  res.json(user);
+  return res.json(user);
 };
