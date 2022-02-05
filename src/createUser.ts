@@ -3,16 +3,23 @@ import { Request, Response } from "express";
 import argon2 from "argon2";
 import { verifyPassword, verifyUsername, verifyEmail } from "./verify";
 
+type CreateUserResponse = {
+  success: boolean;
+  message?: string;
+  id?: number;
+};
+
 export const createUser = async (
   req: Request,
-  res: Response,
+  res: Response<CreateUserResponse>,
   prisma: PrismaClient
 ) => {
   let { username, email, password } = req.body;
 
   if (!username || !email || !password) {
     return res.status(400).json({
-      error: "username, email, and password are required",
+      success: false,
+      message: "username, email, and password are required",
     });
   }
 
@@ -23,7 +30,8 @@ export const createUser = async (
 
   if (!usernameVerification.valid) {
     return res.status(400).json({
-      error: usernameVerification.message,
+      success: false,
+      message: usernameVerification.message,
     });
   }
 
@@ -31,7 +39,8 @@ export const createUser = async (
 
   if (!emailVerification.valid) {
     return res.status(400).json({
-      error: emailVerification.message,
+      success: false,
+      message: emailVerification.message,
     });
   }
 
@@ -39,7 +48,8 @@ export const createUser = async (
 
   if (!passwordVerification.valid) {
     return res.status(400).json({
-      error: passwordVerification.message,
+      success: false,
+      message: passwordVerification.message,
     });
   }
 
@@ -48,8 +58,7 @@ export const createUser = async (
   });
 
   return res.json({
-    user: {
-      id: user.id,
-    },
+    success: true,
+    id: user.id,
   });
 };

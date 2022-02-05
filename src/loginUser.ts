@@ -2,16 +2,23 @@ import { Request, Response } from "express";
 import { PrismaClient } from ".prisma/client";
 import argon2 from "argon2";
 
+type LoginUserResponse = {
+  success: boolean;
+  message?: string;
+  id?: number;
+};
+
 export const loginUser = async (
   req: Request,
-  res: Response,
+  res: Response<LoginUserResponse>,
   prisma: PrismaClient
 ) => {
   let { username, password } = req.body;
 
   if (!username || !password) {
     return res.status(400).json({
-      error: "username and password are required",
+      success: false,
+      message: "username and password are required",
     });
   }
 
@@ -23,7 +30,8 @@ export const loginUser = async (
 
   if (!user) {
     return res.status(400).json({
-      error: "Username or password is incorrect",
+      success: false,
+      message: "Username or password is incorrect",
     });
   }
 
@@ -31,13 +39,13 @@ export const loginUser = async (
 
   if (!valid) {
     return res.status(400).json({
-      error: "Username or password is incorrect",
+      success: false,
+      message: "Username or password is incorrect",
     });
   }
 
   return res.json({
-    user: {
-      id: user.id,
-    },
+    success: true,
+    id: user.id,
   });
 };
