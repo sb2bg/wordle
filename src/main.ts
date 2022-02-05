@@ -8,6 +8,8 @@ const prisma = new PrismaClient();
 const main = async () => {
   const app = express();
 
+  app.use(express.json());
+
   app.post("/users", async (req, res) => {
     await createUser(req, res, prisma);
   });
