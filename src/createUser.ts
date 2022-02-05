@@ -19,7 +19,7 @@ export const createUser = async (
   if (!username || !email || !password) {
     return res.status(400).json({
       success: false,
-      message: "username, email, and password are required",
+      message: "Username, email, and password are required",
     });
   }
 

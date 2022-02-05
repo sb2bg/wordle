@@ -18,7 +18,7 @@ export const loginUser = async (
   if (!username || !password) {
     return res.status(400).json({
       success: false,
-      message: "username and password are required",
+      message: "Username and password are required",
     });
   }
 
