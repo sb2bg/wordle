@@ -1,20 +1,11 @@
-import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import { verifyPassword, verifyUsername, verifyEmail } from "../verify";
-import { generateToken, verifyToken } from "../jwt";
+import { UserResponse } from "../types/userResponse";
+import { generateToken } from "../jwt";
+import { prisma } from "../main";
 import argon2 from "argon2";
 
-type CreateUserResponse = {
-  success: boolean;
-  message?: string;
-  token?: string;
-};
-
-export const createUser = async (
-  req: Request,
-  res: Response<CreateUserResponse>,
-  prisma: PrismaClient
-) => {
+export const createUser = async (req: Request, res: Response<UserResponse>) => {
   let { username, email, password } = req.body;
 
   if (!username || !email || !password) {

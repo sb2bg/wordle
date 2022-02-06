@@ -1,33 +1,28 @@
 import { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
-
-type SolveWordResponse = {
-  success: boolean;
-  message?: string;
-};
+import { GenericResponse } from "../types/genericResponse";
+import { prisma } from "../main";
 
 export const solveWord = async (
   req: Request,
-  res: Response<SolveWordResponse>,
-  prisma: PrismaClient
+  res: Response<GenericResponse>
 ) => {
-  const { userId, wordId } = req.body;
+  const { wordId } = req.body;
 
-  if (!userId || !wordId) {
+  if (!wordId) {
     return res.status(400).json({
       success: false,
-      message: "Fields userID and wordId are required",
+      message: "Field wordId is required",
     });
   }
 
   const user = await prisma.user.findUnique({
-    where: { id: userId },
+    where: { id: req.userId },
   });
 
   if (!user) {
     return res.status(400).json({
       success: false,
-      message: `Couldn't find user with id ${userId}`,
+      message: `Couldn't find user with id ${req.userId}`,
     });
   }
 
@@ -44,7 +39,7 @@ export const solveWord = async (
 
   // update solved words
   await prisma.user.update({
-    where: { id: userId },
+    where: { id: req.userId },
     data: {
       solved: {
         connect: [{ id: word.id }],
