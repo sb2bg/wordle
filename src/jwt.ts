@@ -4,8 +4,6 @@ const secret = process.env.TOKEN_SECRET;
 
 if (!secret) {
   throw new Error("TOKEN_SECRET is not defined");
-} else {
-  console.log("TOKEN_SECRET is defined");
 }
 
 export const generateToken = (userId: number): string => {
