@@ -1,15 +1,28 @@
-import { Response } from "express";
-import { PrismaClient } from "@prisma/client";
+import { Request, Response } from "express";
+import { prisma } from "../main";
 
 type GetDailyWordResponse = {
   word: string;
 };
 
 export const getDailyWord = async (
-  res: Response<GetDailyWordResponse>,
-  _prisma: PrismaClient
+  _req: Request,
+  res: Response<GetDailyWordResponse>
 ) => {
+  // FIXME: get daily word from database instead of the first one
+  const word = await prisma.word.findUnique({
+    where: {
+      id: 1,
+    },
+  });
+
+  if (!word) {
+    return res.status(400).json({
+      word: "lol",
+    });
+  }
+
   return res.json({
-    word: "Placeholder",
+    word: word.word,
   });
 };
