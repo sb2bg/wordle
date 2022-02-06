@@ -10,7 +10,7 @@ if (!secret) {
 
 export const generateToken = (userId: number): string => {
   return jwt.sign({ userId }, secret, {
-    expiresIn: 604800, // 1 week
+    expiresIn: 15, // 1 week
   });
 };
 
@@ -19,19 +19,18 @@ export const authToken = (
   res: Response<GenericResponse>,
   next: Function
 ) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) {
+  const token = req.headers.authorization;
+
+  if (!token) {
     return res.status(401).json({
       success: false,
       message: "No token provided",
     });
   }
 
-  const token = authHeader.split(" ")[1];
-
   jwt.verify(token, secret, (err, decoded) => {
     if (err || !decoded) {
-      res.status(401).json({
+      return res.status(401).json({
         success: false,
         message: "Token is not valid or has expired",
       });
