@@ -1,8 +1,12 @@
 import { PrismaClient } from "@prisma/client";
 import express from "express";
-import { createUser } from "./createUser";
-import { loginUser } from "./loginUser";
+import { createUser } from "./routes/createUser";
+import { getDailyWord } from "./routes/getDailyWord";
+import { loginUser } from "./routes/loginUser";
+import { solveWord } from "./routes/solveWord";
+import dotenv from "dotenv";
 
+dotenv.config();
 const PORT = process.env.PORT || 3000;
 const prisma = new PrismaClient();
 
@@ -17,6 +21,14 @@ const main = async () => {
 
   app.post("/login", async (req, res) => {
     await loginUser(req, res, prisma);
+  });
+
+  app.post("/solve", async (req, res) => {
+    await solveWord(req, res, prisma);
+  });
+
+  app.get("/daily", async (_req, res) => {
+    await getDailyWord(res, prisma);
   });
 
   app.listen(PORT, () => {
